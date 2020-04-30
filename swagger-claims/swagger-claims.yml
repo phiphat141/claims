@@ -1,0 +1,108 @@
+openapi: 3.0.1
+info:
+  title: Claim services
+  description: RESTful APIs for claim services
+  version: 1.0.0
+servers:
+- url: http://localhost/v1
+paths:
+  /claims:
+    get:
+      summary: Get all claims
+      operationId: getAllClaims
+      responses:
+        200:
+          description: All claims
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Claims'
+            application/json:
+              example: |-
+                {
+                  data: [
+                    {
+                      claimId: ,
+                      applicationDate: 20200430,
+                      policyNo: "PL001"
+                    }
+                  ]
+                }
+    post:
+      summary: Add a new claim
+      operationId: addClaim
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Claim'
+        required: true
+      responses:
+        200:
+          description: The claim added
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Claim'
+            application/json:
+              example: |-
+                {
+                  data: [
+                    {
+                      ClaimId: 1,
+                      applicationDate: 20200430,
+                      policyNo: "PL001"
+                    }
+                  ]
+                }
+      x-codegen-request-body-name: body
+  /claims/{claimId}:
+    get:
+      summary: Get an claim by claimId
+      operationId: getClaimById
+      parameters:
+      - name: claimId
+        in: path
+        description: claim ID
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Get claim with the given ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Claim'
+              example: |-
+                {
+                      claimId: 1,
+                      applicationDate: 20200430,
+                      policyNo: "PL001"
+                }
+components:
+  schemas:
+    Claim:
+      type: object
+      properties:
+        claimId:
+          type: integer
+        applicationDate:
+          type: integer
+        policyNo:
+          type: string
+    Claims:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Claim'
+  securitySchemes:
+    basic_auth:
+      type: http
+      scheme: basic
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
